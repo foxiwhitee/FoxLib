@@ -1,0 +1,9 @@
+itemGroup.FOX_LIB_TAB=FOX_LIB
+
+#Items
+item.productivityCard.name=Productivity Card %s
+#Tooltips
+tooltip.productivity.card=§9Adds %s%% productivity
+tooltip.command.hand.description=%s — shows information about the item in the hand
+tooltip.command.hand.onlyForPlayers=§cFor players only!
+tooltip.command.hand.null=§7You have an empty hand

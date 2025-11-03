@@ -1,0 +1,88 @@
+{
+  "crafts": [
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard>",
+      "inputs": ["<minecraft:redstone_block>", "<minecraft:redstone_torch>", "<minecraft:redstone_block>",
+                "<minecraft:iron_ingot>", "<minecraft:comparator>", "<minecraft:iron_ingot>",
+                "<minecraft:redstone_block>", "<minecraft:redstone_torch>", "<minecraft:redstone_block>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.1>",
+      "inputs": ["<minecraft:blaze_rod>", "<minecraft:iron_ingot>", "<minecraft:diamond>",
+                "<minecraft:iron_ingot>", "<foxlib:productivityCard>", "<minecraft:iron_ingot>",
+                "<minecraft:diamond>", "<minecraft:iron_ingot>", "<minecraft:blaze_rod>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.2>",
+      "inputs": ["<minecraft:diamond>", "<minecraft:blaze_rod>", "<minecraft:diamond>",
+                "<minecraft:blaze_rod>", "<foxlib:productivityCard.1>", "<minecraft:blaze_rod>",
+                "<minecraft:diamond>", "<minecraft:blaze_rod>", "<minecraft:diamond>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.3>",
+      "inputs": ["<minecraft:emerald>", "<minecraft:emerald>", "<minecraft:diamond_block>",
+                "<minecraft:emerald>", "<foxlib:productivityCard.2>", "<minecraft:emerald>",
+                "<minecraft:diamond_block>", "<minecraft:emerald>", "<minecraft:emerald>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.4>",
+      "inputs": ["<minecraft:diamond_block>", "<minecraft:diamond_block>", "<minecraft:emerald>",
+                "<minecraft:diamond_block>", "<foxlib:productivityCard.3>", "<minecraft:diamond_block>",
+                "<minecraft:emerald>", "<minecraft:diamond_block>", "<minecraft:diamond_block>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.5>",
+      "inputs": ["<minecraft:diamond_block>", "<minecraft:nether_star>", "<minecraft:diamond_block>",
+                "<minecraft:diamond_block>", "<foxlib:productivityCard.4>", "<minecraft:diamond_block>",
+                "<minecraft:diamond_block>", "<minecraft:diamond_block>", "<minecraft:diamond_block>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.6>",
+      "inputs": ["<minecraft:diamond_block>", "<minecraft:nether_star>", "<minecraft:diamond_block>",
+                "<minecraft:diamond_block>", "<foxlib:productivityCard.5>", "<minecraft:diamond_block>",
+                "<minecraft:diamond_block>", "<minecraft:nether_star>", "<minecraft:diamond_block>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.7>",
+      "inputs": ["<minecraft:diamond_block>", "<minecraft:nether_star>", "<minecraft:diamond_block>",
+                "<minecraft:skull.1>", "<foxlib:productivityCard.6>", "<minecraft:skull.1>",
+                "<minecraft:diamond_block>", "<minecraft:nether_star>", "<minecraft:diamond_block>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.8>",
+      "inputs": ["<minecraft:skull:1>", "<minecraft:obsidian>", "<minecraft:skull:1>",
+                "<minecraft:obsidian>", "<foxlib:productivityCard.7>", "<minecraft:obsidian>",
+                "<minecraft:skull:1>", "<minecraft:obsidian>", "<minecraft:skull:1>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.9>",
+      "inputs": ["<minecraft:skull:1>", "<minecraft:skull:1>", "<minecraft:redstone_block>",
+                "<minecraft:skull:1>", "<foxlib:productivityCard.8>", "<minecraft:skull:1>",
+                "<minecraft:redstone_block>", "<minecraft:skull:1>", "<minecraft:skull:1>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.10>",
+      "inputs": ["<minecraft:nether_star>", "<minecraft:redstone_block>", "<minecraft:nether_star>",
+                "<minecraft:redstone_block>", "<foxlib:productivityCard.9>", "<minecraft:redstone_block>",
+                "<minecraft:nether_star>", "<minecraft:redstone_block>", "<minecraft:nether_star>"]
+    },
+    {
+      "type": "workbenchShaped",
+      "output": "<foxlib:productivityCard.11>",
+      "inputs": ["<minecraft:nether_star>", "<foxlib:productivityCard.9>", "<minecraft:nether_star>",
+                "<minecraft:nether_star>", "<foxlib:productivityCard.10>", "<minecraft:nether_star>",
+                "<minecraft:nether_star>", "<minecraft:nether_star>", "<minecraft:nether_star>"]
+    }
+  ]
+}
