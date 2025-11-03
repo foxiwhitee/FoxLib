@@ -23,28 +23,9 @@ public abstract class CraftingGridCacheMixin implements ICraftingGridCacheAdditi
     @Final
     private Set<CraftingCPUCluster> craftingCPUClusters;
 
-    @Shadow
-    @Final
-    private IGrid grid;
-
     @Override
     public Set<CraftingCPUCluster> getCraftingCPUClusters() {
         return craftingCPUClusters;
     }
 
-    @Inject(method = "updateCPUClusters", at = @At("TAIL"))
-    private void onAddTileEnd(CallbackInfo ci) {
-        for(IGridNode cst : grid.getMachines(ITileMEServer.class)) {
-            ITileMEServer tile = (ITileMEServer)cst.getMachine();
-            for (int i = 0; i < tile.getVirtualClusters().size(); i++) {
-                CraftingCPUCluster cluster = (CraftingCPUCluster)tile.getVirtualClusters().get(i);
-                if (cluster != null) {
-                    ((ICraftingGridCacheAddition) (Object) this).getCraftingCPUClusters().add(cluster);
-                    if (cluster.getLastCraftingLink() != null) {
-                        ((CraftingGridCache)((Object) this)).addLink((CraftingLink)cluster.getLastCraftingLink());
-                    }
-                }
-            }
-        }
-    }
 }
