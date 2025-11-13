@@ -3,21 +3,30 @@ package foxiwhitee.FoxLib.block;
 import appeng.tile.AEBaseTile;
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
 import foxiwhitee.FoxLib.api.orientable.IOrientableBlock;
+import foxiwhitee.FoxLib.integration.crafttweaker.DynamicIntegration;
+import foxiwhitee.FoxLib.recipes.IJsonRecipe;
 import foxiwhitee.FoxLib.tile.FoxBaseTile;
 import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class FoxBaseBlock extends Block implements IOrientableBlock {
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class FoxBaseBlock extends Block implements IOrientableBlock, ITileEntityProvider {
     protected final String name;
     private Class<? extends TileEntity> tileEntityType;
 
-    public FoxBaseBlock(String name) {
+    public FoxBaseBlock(String modID, String name) {
         super(Material.rock);
         this.name = name;
+        this.setBlockName(name);
+        this.setBlockTextureName(modID + ":" + name);
+        this.lightOpacity = 1;
     }
 
     public final boolean rotateBlock(final World w, final int x, final int y, final int z, final ForgeDirection axis) {
@@ -107,5 +116,21 @@ public class FoxBaseBlock extends Block implements IOrientableBlock {
 
     public void setTileEntityType(Class<? extends TileEntity> tileEntityType) {
         this.tileEntityType = tileEntityType;
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        Constructor<? extends TileEntity> constructor = null;
+        try {
+            constructor = tileEntityType.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        constructor.setAccessible(true);
+        try {
+            return constructor.newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
