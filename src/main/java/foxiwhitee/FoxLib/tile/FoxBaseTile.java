@@ -7,6 +7,9 @@ import foxiwhitee.FoxLib.tile.event.TileEventType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -152,5 +155,18 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         if (worldObj.blockExists(this.xCoord, this.yCoord, this.zCoord)) {
             worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Blocks.air);
         }
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        this.writeToNBT(nbttagcompound);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, -999, nbttagcompound);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        this.readFromNBT(pkt.func_148857_g());
     }
 }
