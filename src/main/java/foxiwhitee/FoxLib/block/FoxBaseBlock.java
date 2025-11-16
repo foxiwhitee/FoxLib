@@ -139,10 +139,10 @@ public class FoxBaseBlock extends Block implements IOrientableBlock, ITileEntity
     }
 
     public void breakBlock(World world, int x, int y, int z, Block block, int b) {
-        FoxBaseInvTile te = (FoxBaseInvTile)world.getTileEntity(x, y, z);
-        if (te != null) {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te != null && te instanceof FoxBaseInvTile invTile) {
             ArrayList<ItemStack> drops = new ArrayList<>();
-            te.getDrops(world, x, y, z, drops);
+            invTile.getDrops(world, x, y, z, drops);
             spawnDrops(world, x, y, z, drops);
         }
         super.breakBlock(world, x, y, z, block, b);
