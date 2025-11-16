@@ -13,7 +13,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 public abstract class FoxBaseInvTile extends FoxBaseTile implements IFoxInternalInventory, ISidedInventory {
 
@@ -43,6 +46,18 @@ public abstract class FoxBaseInvTile extends FoxBaseTile implements IFoxInternal
         } else {
             return this.getAccessibleSlotsBySide(ForgeDirection.getOrientation(side));
         }
+    }
+
+    public void getDrops(World w, int x, int y, int z, List<ItemStack> drops) {
+        IInventory inv = (IInventory) this;
+
+        for(int l = 0; l < inv.getSizeInventory(); ++l) {
+            ItemStack is = inv.getStackInSlot(l);
+            if (is != null) {
+                drops.add(is);
+            }
+        }
+
     }
 
     @Override

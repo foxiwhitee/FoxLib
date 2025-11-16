@@ -1,14 +1,15 @@
 package foxiwhitee.FoxLib.block;
 
-import appeng.tile.AEBaseTile;
+import cpw.mods.fml.common.FMLCommonHandler;
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
 import foxiwhitee.FoxLib.api.orientable.IOrientableBlock;
-import foxiwhitee.FoxLib.integration.crafttweaker.DynamicIntegration;
-import foxiwhitee.FoxLib.recipes.IJsonRecipe;
+import foxiwhitee.FoxLib.tile.FoxBaseInvTile;
 import foxiwhitee.FoxLib.tile.FoxBaseTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -16,6 +17,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class FoxBaseBlock extends Block implements IOrientableBlock, ITileEntityProvider {
     protected final String name;
@@ -132,5 +136,33 @@ public class FoxBaseBlock extends Block implements IOrientableBlock, ITileEntity
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void breakBlock(World world, int x, int y, int z, Block block, int b) {
+        FoxBaseInvTile te = (FoxBaseInvTile)world.getTileEntity(x, y, z);
+        if (te != null) {
+            ArrayList<ItemStack> drops = new ArrayList<>();
+            te.getDrops(world, x, y, z, drops);
+            spawnDrops(world, x, y, z, drops);
+        }
+        super.breakBlock(world, x, y, z, block, b);
+    }
+
+    public static void spawnDrops(World w, int x, int y, int z, List<ItemStack> drops) {
+        if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+            for(ItemStack i : drops) {
+                if (i != null && i.stackSize > 0) {
+                    double offset_x = (double)((getRandomInt() % 32 - 16) / 82);
+                    double offset_y = (double)((getRandomInt() % 32 - 16) / 82);
+                    double offset_z = (double)((getRandomInt() % 32 - 16) / 82);
+                    EntityItem ei = new EntityItem(w, (double)0.5F + offset_x + (double)x, (double)0.5F + offset_y + (double)y, 0.2 + offset_z + (double)z, i.copy());
+                    w.spawnEntityInWorld(ei);
+                }
+            }
+        }
+    }
+
+    private static int getRandomInt() {
+        return Math.abs(new Random().nextInt());
     }
 }
