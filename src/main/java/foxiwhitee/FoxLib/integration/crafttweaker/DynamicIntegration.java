@@ -6,6 +6,7 @@ import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.value.IAny;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +16,7 @@ public class DynamicIntegration {
     public static final Set<IJsonRecipe> DYNAMIC_TYPES = new HashSet<>();
 
     @ZenMethod
-    public static void addRecipe(String type, IItemStack output, IIngredient[] inputs) {
+    public static void addRecipe(String type, IItemStack output, IAny[] inputs) {
         IJsonRecipe recipeType = findType(type);
         if (recipeType == null) {
             MineTweakerAPI.logError("Unknown recipe type: " + type);

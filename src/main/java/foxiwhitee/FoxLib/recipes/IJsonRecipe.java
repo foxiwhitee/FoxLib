@@ -3,6 +3,7 @@ package foxiwhitee.FoxLib.recipes;
 import com.google.gson.JsonObject;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import stanhebben.zenscript.value.IAny;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface IJsonRecipe<I, O> {
     IJsonRecipe create(JsonObject data);
     void register();
 
-    default void addCraftByMineTweaker(IItemStack stack, IIngredient... inputs) {
+    default void addCraftByMineTweaker(IItemStack stack, IAny... inputs) {
 
     }
 
