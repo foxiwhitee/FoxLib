@@ -3,6 +3,7 @@ package foxiwhitee.FoxLib.recipes;
 import com.google.gson.JsonObject;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.item.IItemStack;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.value.IAny;
 
 import java.util.Arrays;
@@ -19,6 +20,16 @@ public interface IJsonRecipe<I, O> {
     void register();
 
     default void addCraftByMineTweaker(IItemStack stack, IAny... inputs) {
+        IIngredient[] ingredients = new IIngredient[inputs.length];
+        for (int i = 0; i < inputs.length; i++) {
+            if (inputs[i].is(IIngredient.class)) {
+                ingredients[i] = inputs[i].as(IIngredient.class);
+            }
+        }
+        addCraftByMineTweaker(stack, ingredients);
+    }
+
+    default void addCraftByMineTweaker(IItemStack stack, IIngredient... inputs) {
 
     }
 
