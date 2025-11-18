@@ -61,7 +61,7 @@ public class ItemProductivityCard extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        int meta = (stack != null) ? stack.getItemDamage() : 0;
+        int meta = Math.min((stack != null) ? stack.getItemDamage() : 0, prefixes.length - 1);
         return LocalizationUtils.localize(getUnlocalizedName() + ".name", prefixes[meta]);
     }
 

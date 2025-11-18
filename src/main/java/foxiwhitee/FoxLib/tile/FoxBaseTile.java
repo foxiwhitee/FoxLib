@@ -1,10 +1,12 @@
 package foxiwhitee.FoxLib.tile;
 
+import appeng.core.AELog;
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
 import foxiwhitee.FoxLib.tile.event.TileEvent;
 import foxiwhitee.FoxLib.tile.event.TileEventHandler;
 import foxiwhitee.FoxLib.tile.event.TileEventType;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -159,14 +161,31 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
 
     @Override
     public Packet getDescriptionPacket() {
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
-        this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, -999, nbttagcompound);
+        NBTTagCompound data = new NBTTagCompound();
+        ByteBuf stream = Unpooled.buffer();
+
+        try {
+            this.writeToStream(stream);
+            if (stream.readableBytes() == 0) {
+                return null;
+            }
+        } catch (Throwable t) {
+            AELog.debug(t);
+        }
+
+        stream.capacity(stream.readableBytes());
+        data.setByteArray("X", stream.array());
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 666, data);
     }
 
-    @Override
+
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        super.onDataPacket(net, pkt);
-        this.readFromNBT(pkt.func_148857_g());
+        if (pkt.func_148853_f() == 666) {
+            ByteBuf stream = Unpooled.copiedBuffer(pkt.func_148857_g().getByteArray("X"));
+            if (this.readFromStream(stream)) {
+                this.markForUpdate();
+            }
+        }
+
     }
 }
