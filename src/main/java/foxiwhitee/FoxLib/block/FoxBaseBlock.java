@@ -31,6 +31,8 @@ public class FoxBaseBlock extends Block implements IOrientableBlock, ITileEntity
         this.setBlockName(name);
         this.setBlockTextureName(modID + ":" + name);
         this.lightOpacity = 1;
+        this.setHardness(2.0F);
+        this.setResistance(10.0F);
     }
 
     public final boolean rotateBlock(final World w, final int x, final int y, final int z, final ForgeDirection axis) {
