@@ -12,7 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface SimpleGuiHandler {
-    int index();
     Class<? extends TileEntity> tile();
     Class<? extends GuiContainer> gui();
     Class<? extends Container> container();

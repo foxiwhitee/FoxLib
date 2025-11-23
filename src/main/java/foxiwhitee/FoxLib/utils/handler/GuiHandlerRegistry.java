@@ -49,11 +49,9 @@ public class GuiHandlerRegistry {
                     throw new SimpleGuiHandlerException("Invalid Container constructor for " + annotation.gui().getName() + " in " + clazz.getName() + " must inherit from Block. Container must accept EntityPlayer and TileEntity");
                 }
 
-                if (guiHandlers.containsKey(annotation.index())) {
-                    throw new SimpleGuiHandlerException("Duplicate GUI index " + annotation.index() + " for " + clazz.getName());
-                }
+                GuiHandlers.registerHandler(clazz);
 
-                guiHandlers.put(annotation.index(), annotation);
+                guiHandlers.put(GuiHandlers.getHandler(clazz), annotation);
             } catch (ClassNotFoundException e) {
                 System.err.println("Failed to load class " + entry.getClassName() + ": " + e.getMessage());
                 e.printStackTrace();
