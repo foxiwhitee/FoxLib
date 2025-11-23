@@ -103,7 +103,7 @@ public abstract class FoxBaseContainer extends Container {
                     && ItemStack.areItemStackTagsEqual(stack, slotStack)) {
 
                     int total = slotStack.stackSize + stack.stackSize;
-                    int max = stack.getMaxStackSize();
+                    int max = Math.min(stack.getMaxStackSize(), slot.inventory.getInventoryStackLimit());
 
                     if (total <= max) {
                         stack.stackSize = 0;
@@ -138,12 +138,16 @@ public abstract class FoxBaseContainer extends Container {
                 }
 
                 if (slotStack == null) {
-                    slot.putStack(stack.copy());
+                    int max = Math.min(stack.stackSize, slot.inventory.getInventoryStackLimit());
+                    ItemStack newStack = stack.copy();
+                    newStack.stackSize = max;
+                    slot.putStack(newStack);
                     slot.onSlotChanged();
-                    stack.stackSize = 0;
+                    stack.stackSize -= max;
                     changed = true;
                     break;
                 }
+
 
                 if (reverse) --index; else ++index;
             }

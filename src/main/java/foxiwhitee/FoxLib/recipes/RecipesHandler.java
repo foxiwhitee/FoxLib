@@ -12,6 +12,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
@@ -131,7 +132,13 @@ public class RecipesHandler {
             }
 
             if (protocol.equals("jar")) {
-                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf('!'));
+                String url = dirURL.toString();
+
+                if (!url.startsWith("jar:file:")) {
+                    throw new IllegalArgumentException("Not a JAR URL: " + url);
+                }
+
+                String jarPath = url.substring("jar:file:".length(), url.indexOf("!"));
                 try (JarFile jar = new JarFile(jarPath)) {
                     Enumeration<JarEntry> entries = jar.entries();
                     while (entries.hasMoreElements()) {

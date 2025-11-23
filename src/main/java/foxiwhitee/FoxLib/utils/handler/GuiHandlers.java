@@ -1,9 +1,21 @@
 package foxiwhitee.FoxLib.utils.handler;
 
+import net.minecraft.client.gui.GuiButton;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public final class GuiHandlers {
-    public static final int cobblestoneDuper = 4;
-    public static final int meServer = 10;
+    private static final Map<Class<?>, Integer> handlers = new HashMap<>();
+    private static int counter = 0;
 
-   private GuiHandlers() {}
+    private GuiHandlers() {}
 
+    public static void registerHandler(Class<?> clazz) {
+        handlers.put(clazz, counter++);
+    }
+
+    public static int getHandler(Class<?> clazz) {
+        return handlers.get(clazz);
+    }
 }
