@@ -59,16 +59,16 @@
     {
       "type": "workbenchShaped",
       "output": "<foxlib:productivityCard.8>",
-      "inputs": ["<minecraft:skull:1>", "<minecraft:obsidian>", "<minecraft:skull:1>",
+      "inputs": ["<minecraft:skull.1>", "<minecraft:obsidian>", "<minecraft:skull.1>",
                 "<minecraft:obsidian>", "<foxlib:productivityCard.7>", "<minecraft:obsidian>",
-                "<minecraft:skull:1>", "<minecraft:obsidian>", "<minecraft:skull:1>"]
+                "<minecraft:skull.1>", "<minecraft:obsidian>", "<minecraft:skull.1>"]
     },
     {
       "type": "workbenchShaped",
       "output": "<foxlib:productivityCard.9>",
-      "inputs": ["<minecraft:skull:1>", "<minecraft:skull:1>", "<minecraft:redstone_block>",
-                "<minecraft:skull:1>", "<foxlib:productivityCard.8>", "<minecraft:skull:1>",
-                "<minecraft:redstone_block>", "<minecraft:skull:1>", "<minecraft:skull:1>"]
+      "inputs": ["<minecraft:skull.1>", "<minecraft:skull.1>", "<minecraft:redstone_block>",
+                "<minecraft:skull.1>", "<foxlib:productivityCard.8>", "<minecraft:skull.1>",
+                "<minecraft:redstone_block>", "<minecraft:skull.1>", "<minecraft:skull.1>"]
     },
     {
       "type": "workbenchShaped",
@@ -76,13 +76,6 @@
       "inputs": ["<minecraft:nether_star>", "<minecraft:redstone_block>", "<minecraft:nether_star>",
                 "<minecraft:redstone_block>", "<foxlib:productivityCard.9>", "<minecraft:redstone_block>",
                 "<minecraft:nether_star>", "<minecraft:redstone_block>", "<minecraft:nether_star>"]
-    },
-    {
-      "type": "workbenchShaped",
-      "output": "<foxlib:productivityCard.11>",
-      "inputs": ["<minecraft:nether_star>", "<foxlib:productivityCard.9>", "<minecraft:nether_star>",
-                "<minecraft:nether_star>", "<foxlib:productivityCard.10>", "<minecraft:nether_star>",
-                "<minecraft:nether_star>", "<minecraft:nether_star>", "<minecraft:nether_star>"]
     }
   ]
 }

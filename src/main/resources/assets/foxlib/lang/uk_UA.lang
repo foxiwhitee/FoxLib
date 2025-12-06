@@ -2,7 +2,7 @@
 #Items
 item.productivityCard.name=Карта продуктивності %s
 #Tooltips
-tooltip.productivity.card=§9Додає %s% продуктивності
+tooltip.productivity.card=§9Додає %s%% продуктивності
 tooltip.command.hand.description=%s — показує інформацію про предмет у руці
 tooltip.command.hand.onlyForPlayers=§cТільки для гравців!
 tooltip.command.hand.null=§7У тебе порожня рука

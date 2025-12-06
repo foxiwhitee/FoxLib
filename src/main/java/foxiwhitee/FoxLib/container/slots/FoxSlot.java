@@ -8,32 +8,20 @@ import net.minecraft.item.ItemStack;
 public class FoxSlot extends Slot {
     private final int defX;
     private final int defY;
-    private boolean isDraggable = true;
-    private boolean isPlayerSide = false;
+    private final int idx;
     private FoxBaseContainer myContainer = null;
-    private int IIcon = -1;
-    private hasCalculatedValidness isValid;
     private boolean isDisplay = false;
+    private IOptionalSlotHost host;
 
     public FoxSlot(IInventory inv, int idx, int x, int y) {
+        this(inv, null, idx, x, y);
+    }
+    public FoxSlot(IInventory inv, IOptionalSlotHost host, int idx, int x, int y) {
         super(inv, idx, x, y);
         this.defX = x;
         this.defY = y;
-        this.setIsValid(hasCalculatedValidness.NotAvailable);
-    }
-
-    public Slot setNotDraggable() {
-        this.setDraggable(false);
-        return this;
-    }
-
-    public Slot setPlayerSide() {
-        this.isPlayerSide = true;
-        return this;
-    }
-
-    public String getTooltip() {
-        return null;
+        this.idx = idx;
+        this.host = host;
     }
 
     public void clearStack() {
@@ -63,11 +51,6 @@ public class FoxSlot extends Slot {
         }
     }
 
-    public void onSlotChanged() {
-        super.onSlotChanged();
-        this.setIsValid(hasCalculatedValidness.NotAvailable);
-    }
-
     public boolean func_111238_b() {
         return this.isEnabled();
     }
@@ -77,27 +60,10 @@ public class FoxSlot extends Slot {
     }
 
     public boolean isEnabled() {
-        return true;
-    }
-
-    public float getOpacityOfIcon() {
-        return 0.4F;
-    }
-
-    public boolean renderIconWithItem() {
-        return false;
-    }
-
-    public int getIcon() {
-        return this.getIIcon();
-    }
-
-    public boolean isPlayerSide() {
-        return this.isPlayerSide;
-    }
-
-    public boolean shouldDisplay() {
-        return this.isEnabled();
+        if (host == null) {
+            return true;
+        }
+        return host.isSlotEnabled(idx);
     }
 
     public int getX() {
@@ -108,40 +74,12 @@ public class FoxSlot extends Slot {
         return this.defY;
     }
 
-    private int getIIcon() {
-        return this.IIcon;
-    }
-
-    public void setIIcon(int iIcon) {
-        this.IIcon = iIcon;
-    }
-
     private boolean isDisplay() {
         return this.isDisplay;
     }
 
     public void setDisplay(boolean isDisplay) {
         this.isDisplay = isDisplay;
-    }
-
-    public boolean isDraggable() {
-        return this.isDraggable;
-    }
-
-    private void setDraggable(boolean isDraggable) {
-        this.isDraggable = isDraggable;
-    }
-
-    void setPlayerSide(boolean isPlayerSide) {
-        this.isPlayerSide = isPlayerSide;
-    }
-
-    public hasCalculatedValidness getIsValid() {
-        return this.isValid;
-    }
-
-    public void setIsValid(hasCalculatedValidness isValid) {
-        this.isValid = isValid;
     }
 
     FoxBaseContainer getContainer() {
@@ -152,12 +90,4 @@ public class FoxSlot extends Slot {
         this.myContainer = myContainer;
     }
 
-    public static enum hasCalculatedValidness {
-        NotAvailable,
-        Valid,
-        Invalid;
-
-        private hasCalculatedValidness() {
-        }
-    }
 }

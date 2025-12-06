@@ -6,9 +6,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import foxiwhitee.FoxLib.commands.CommandFindDuplicateCrafts;
 import foxiwhitee.FoxLib.commands.CommandHand;
 import foxiwhitee.FoxLib.proxy.CommonProxy;
 import foxiwhitee.FoxLib.recipes.RecipesLocation;
+import foxiwhitee.FoxLib.utils.FindDuplicateCraftsScript;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
@@ -55,6 +57,7 @@ public class FoxLib {
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandHand());
+        event.registerServerCommand(new CommandFindDuplicateCrafts());
     }
 
 }

@@ -18,7 +18,11 @@ public class SlotFiltered extends FoxSlot {
     private int stackLimit = -1;
 
     public SlotFiltered(String valid, IInventory i, int slotIndex, int x, int y, InventoryPlayer p) {
-        super(i, slotIndex, x, y);
+        this(valid, null, i, slotIndex, x, y, p);
+    }
+
+    public SlotFiltered(String valid, IOptionalSlotHost host, IInventory i, int slotIndex, int x, int y, InventoryPlayer p) {
+        super(i, host, slotIndex, x, y);
         this.which = valid;
         this.p = p;
     }

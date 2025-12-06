@@ -132,28 +132,30 @@ public class RecipesHandler {
             }
 
             if (protocol.equals("jar")) {
-                String url = dirURL.toString();
+                //String p = dirURL.getPath();
+                String url = dirURL.getPath();
 
-                if (!url.startsWith("jar:file:")) {
-                    throw new IllegalArgumentException("Not a JAR URL: " + url);
-                }
+                if (url.startsWith("jar:file:") || url.startsWith("file:")) {
 
-                String jarPath = url.substring("jar:file:".length(), url.indexOf("!"));
-                try (JarFile jar = new JarFile(jarPath)) {
-                    Enumeration<JarEntry> entries = jar.entries();
-                    while (entries.hasMoreElements()) {
-                        JarEntry entry = entries.nextElement();
-                        String name = entry.getName();
-                        if (name.startsWith(path) && name.endsWith(".json") && !entry.isDirectory()) {
-                            try (InputStream is = jar.getInputStream(entry);
-                                 Reader reader = new InputStreamReader(is)) {
-                                JsonObject obj = gson.fromJson(reader, JsonObject.class);
-                                if (obj != null) result.add(obj);
+                    url = url.replace("jar:", "").replace("file:", "").replaceAll(" ", "\s");
+                    String jarPath = url.substring(0, url.indexOf("!"));
+                    try (JarFile jar = new JarFile(jarPath)) {
+                        Enumeration<JarEntry> entries = jar.entries();
+                        while (entries.hasMoreElements()) {
+                            JarEntry entry = entries.nextElement();
+                            String name = entry.getName();
+                            if (name.startsWith(path) && name.endsWith(".json") && !entry.isDirectory()) {
+                                try (InputStream is = jar.getInputStream(entry);
+                                     Reader reader = new InputStreamReader(is)) {
+                                    JsonObject obj = gson.fromJson(reader, JsonObject.class);
+                                    if (obj != null) result.add(obj);
+                                }
                             }
                         }
                     }
+                    return result;
                 }
-                return result;
+                throw new IllegalArgumentException("Not a JAR URL: " + url);
             }
         }
 
