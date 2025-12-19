@@ -38,7 +38,6 @@ public class GuiHandlerRegistry {
                     continue;
                 }
 
-                // Só valida GUI se estivermos no lado CLIENTE
                 if (cpw.mods.fml.common.FMLCommonHandler.instance().getEffectiveSide().isClient()) {
                     if (!validateGuiConstructor(annotation.gui(), annotation.container())) {
                         throw new SimpleGuiHandlerException("Invalid GUI constructor for " + annotation.gui().getName() + " in " + clazz.getName());

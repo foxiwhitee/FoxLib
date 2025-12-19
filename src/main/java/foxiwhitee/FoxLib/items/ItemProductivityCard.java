@@ -27,7 +27,7 @@ public class ItemProductivityCard extends Item {
 
     @Override
     public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List<String> p_77624_3_, boolean p_77624_4_) {
-        if (FoxLibConfig.enable_tooltips) {
+        if (FoxLibConfig.enableTooltips) {
             int productivity = switch (p_77624_1_.getItemDamage()) {
                 case 0 -> FoxLibConfig.productivityLvl1;
                 case 1 -> FoxLibConfig.productivityLvl2;

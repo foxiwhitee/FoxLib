@@ -1,6 +1,5 @@
 package foxiwhitee.FoxLib.tile;
 
-import appeng.core.AELog;
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
 import foxiwhitee.FoxLib.tile.event.TileEvent;
 import foxiwhitee.FoxLib.tile.event.TileEventHandler;
@@ -170,7 +169,6 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
                 return null;
             }
         } catch (Throwable t) {
-            AELog.debug(t);
         }
 
         stream.capacity(stream.readableBytes());

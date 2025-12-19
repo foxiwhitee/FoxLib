@@ -17,6 +17,6 @@ public class CommandFindDuplicateCrafts extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        FindDuplicateCraftsScript.findReverseCrafts();
+        new FindDuplicateCraftsScript().findReverseCrafts();
     }
 }

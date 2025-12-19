@@ -37,6 +37,7 @@ public class SlotFiltered extends FoxSlot {
     }
 
     public boolean isItemValid(ItemStack i) {
+        if (!isEnabled()) return false;
         if (i == null) {
             return false;
         } else if (i.getItem() == null) {

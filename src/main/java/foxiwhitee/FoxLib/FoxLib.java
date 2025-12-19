@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import foxiwhitee.FoxLib.commands.CommandFindDuplicateCrafts;
 import foxiwhitee.FoxLib.commands.CommandHand;
+import foxiwhitee.FoxLib.config.FoxLibConfig;
 import foxiwhitee.FoxLib.proxy.CommonProxy;
 import foxiwhitee.FoxLib.recipes.RecipesLocation;
 import foxiwhitee.FoxLib.utils.FindDuplicateCraftsScript;
@@ -21,7 +22,7 @@ public class FoxLib {
     public static final String
         MODID = "foxlib",
         MODNAME = "FoxLib",
-        VERSION = "1.1.0";
+        VERSION = "1.2.0";
 
     @Mod.Instance(MODID)
     public static FoxLib instance;
@@ -56,8 +57,12 @@ public class FoxLib {
 
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new CommandHand());
-        event.registerServerCommand(new CommandFindDuplicateCrafts());
+        if (FoxLibConfig.enableHandCommand) {
+            event.registerServerCommand(new CommandHand());
+        }
+        if (FoxLibConfig.enableFindDuplicateCraftsCommand) {
+            event.registerServerCommand(new CommandFindDuplicateCrafts());
+        }
     }
 
 }
