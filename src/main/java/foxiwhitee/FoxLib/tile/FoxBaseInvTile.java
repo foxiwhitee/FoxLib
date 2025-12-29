@@ -1,7 +1,6 @@
 package foxiwhitee.FoxLib.tile;
 
 
-import appeng.block.AEBaseBlock;
 import foxiwhitee.FoxLib.block.FoxBaseBlock;
 import foxiwhitee.FoxLib.tile.event.TileEvent;
 import foxiwhitee.FoxLib.tile.event.TileEventType;
@@ -9,7 +8,6 @@ import foxiwhitee.FoxLib.tile.inventory.FoxInternalInventory;
 import foxiwhitee.FoxLib.tile.inventory.IFoxInternalInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -93,11 +91,6 @@ public abstract class FoxBaseInvTile extends FoxBaseTile implements IFoxInternal
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         getInternalInventory().setInventorySlotContents(index, stack);
-    }
-
-    @Override
-    public String getInventoryName() {
-        return "internalInventory";
     }
 
     @Override

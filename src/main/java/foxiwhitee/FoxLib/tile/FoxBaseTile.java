@@ -1,6 +1,7 @@
 package foxiwhitee.FoxLib.tile;
 
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
+import foxiwhitee.FoxLib.tile.event.TickableHelper;
 import foxiwhitee.FoxLib.tile.event.TileEvent;
 import foxiwhitee.FoxLib.tile.event.TileEventHandler;
 import foxiwhitee.FoxLib.tile.event.TileEventType;
@@ -20,6 +21,7 @@ import java.util.*;
 public abstract class FoxBaseTile extends TileEntity implements IOrientable {
     private static final Map<Class<? extends FoxBaseTile>, Map<TileEventType, List<TileEventHandler>>> HANDLERS = new HashMap();
     private ForgeDirection forward;
+    private final TickableHelper tickableHelper = new TickableHelper();
 
     public FoxBaseTile() {
         this.forward = ForgeDirection.UNKNOWN;
@@ -27,6 +29,8 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
 
     public final void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
+
+        tickableHelper.readFromNbt(data, this);
 
         try {
             if (this.canBeRotated()) {
@@ -43,6 +47,8 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
     public final void writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
 
+        tickableHelper.writeToNbt(data);
+
         if (this.canBeRotated()) {
             data.setString("orientation_forward", this.forward.name());
         }
@@ -56,6 +62,13 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         for(TileEventHandler h : this.getHandlerListFor(TileEventType.TICK)) {
             h.tick(this);
         }
+        if (worldObj.isRemote) {
+            return;
+        }
+        if (tickableHelper.isEmpty()) {
+            tickableHelper.init(this.getHandlerListFor(TileEventType.TICK_SPEED));
+        }
+        tickableHelper.tick();
     }
 
     private final boolean readFromStream(ByteBuf data) {
@@ -138,7 +151,7 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
 
     private void addHandler(Map<TileEventType, List<TileEventHandler>> handlerSet, TileEventType value, Method m) {
         List<TileEventHandler> list = handlerSet.computeIfAbsent(value, (k) -> new ArrayList<>());
-        list.add(new TileEventHandler(m));
+        list.add(new TileEventHandler(m, this));
     }
 
     public boolean canBeRotated() {
@@ -176,7 +189,6 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 666, data);
     }
 
-
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
         if (pkt.func_148853_f() == 666) {
             ByteBuf stream = Unpooled.copiedBuffer(pkt.func_148857_g().getByteArray("X"));
@@ -184,6 +196,9 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
                 this.markForUpdate();
             }
         }
+    }
 
+    protected void awakeTickableFunction(String key) {
+        tickableHelper.awake(key);
     }
 }

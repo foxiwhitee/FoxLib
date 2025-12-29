@@ -22,7 +22,7 @@ public class FoxLib {
     public static final String
         MODID = "foxlib",
         MODNAME = "FoxLib",
-        VERSION = "1.2.0";
+        VERSION = "1.3.0";
 
     @Mod.Instance(MODID)
     public static FoxLib instance;
