@@ -1,12 +1,57 @@
 package foxiwhitee.FoxLib.api.orientable;
 
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public interface IOrientableBlock {
-    IOrientable getOrientable(IBlockAccess var1, int var2, int var3, int var4);
+public class RotationHelper {
+    public static int getUVRotation(int side, ForgeDirection forward, ForgeDirection up) {
+        if (forward == ForgeDirection.UNKNOWN) return 0;
 
-    static ForgeDirection rotateAround(final ForgeDirection forward, final ForgeDirection axis) {
+        if (side == 0 || side == 1) {
+            if (forward.offsetY == 0) {
+                return switch (forward) {
+                    case NORTH -> 3;
+                    case WEST -> side == 0 ? 1 : 2;
+                    case EAST -> side == 0 ? 2 : 1;
+                    default -> 0;
+                };
+            } else {
+                return switch (up) {
+                    case NORTH -> 0;
+                    case SOUTH -> 3;
+                    case WEST -> side == 0 ? 2 : 1;
+                    case EAST -> side == 0 ? 1 : 2;
+                    default -> 0;
+                };
+            }
+        }
+
+        if (side > 1 && (forward == ForgeDirection.UP || forward == ForgeDirection.DOWN)) {
+            return getSideRotation(side, forward, up);
+        }
+
+        return 0;
+    }
+
+    private static int getSideRotation(int side, ForgeDirection forward, ForgeDirection up) {
+        ForgeDirection sideDir = ForgeDirection.getOrientation(side);
+
+
+        if (sideDir == up.getOpposite()) {
+            return (forward == ForgeDirection.UP) ? 1 : 1;
+        }
+
+        if (sideDir == up) {
+            return (forward == ForgeDirection.UP) ? 2 : 2;
+        }
+
+        if (forward == ForgeDirection.UP) {
+            return 3;
+        } else {
+            return 0;
+        }
+    }
+
+    public static ForgeDirection rotateAround(final ForgeDirection forward, final ForgeDirection axis) {
         if (axis == ForgeDirection.UNKNOWN || forward == ForgeDirection.UNKNOWN) {
             return forward;
         }
@@ -121,4 +166,3 @@ public interface IOrientableBlock {
         return forward;
     }
 }
-

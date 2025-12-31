@@ -18,4 +18,8 @@ public final class GuiHandlers {
     public static int getHandler(Class<?> clazz) {
         return handlers.get(clazz);
     }
+
+    public static boolean containsHandler(Class<?> clazz) {
+        return handlers.containsKey(clazz);
+    }
 }

@@ -1,5 +1,6 @@
 package foxiwhitee.FoxLib.tile;
 
+import foxiwhitee.FoxLib.api.orientable.FastOrientableManager;
 import foxiwhitee.FoxLib.api.orientable.IOrientable;
 import foxiwhitee.FoxLib.tile.event.TickableHelper;
 import foxiwhitee.FoxLib.tile.event.TileEvent;
@@ -18,13 +19,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public abstract class FoxBaseTile extends TileEntity implements IOrientable {
+public class FoxBaseTile extends TileEntity implements IOrientable {
     private static final Map<Class<? extends FoxBaseTile>, Map<TileEventType, List<TileEventHandler>>> HANDLERS = new HashMap();
-    private ForgeDirection forward;
+    private final int orientableId = FastOrientableManager.nextId();
     private final TickableHelper tickableHelper = new TickableHelper();
 
     public FoxBaseTile() {
-        this.forward = ForgeDirection.UNKNOWN;
     }
 
     public final void readFromNBT(NBTTagCompound data) {
@@ -32,11 +32,10 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
 
         tickableHelper.readFromNbt(data, this);
 
-        try {
-            if (this.canBeRotated()) {
-                this.forward = ForgeDirection.valueOf(data.getString("orientation_forward"));
-            }
-        } catch (IllegalArgumentException var4) {
+        if (this.canBeRotated()) {
+            ForgeDirection f = ForgeDirection.getOrientation(data.getByte("f_fwd"));
+            ForgeDirection u = ForgeDirection.getOrientation(data.getByte("f_up"));
+            this.setOrientation(f, u);
         }
 
         for (TileEventHandler h : this.getHandlerListFor(TileEventType.SERVER_NBT_READ)) {
@@ -50,7 +49,8 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         tickableHelper.writeToNbt(data);
 
         if (this.canBeRotated()) {
-            data.setString("orientation_forward", this.forward.name());
+            data.setByte("f_fwd", (byte) getForward().ordinal());
+            data.setByte("f_up", (byte) getUp().ordinal());
         }
 
         for (TileEventHandler h : this.getHandlerListFor(TileEventType.SERVER_NBT_WRITE)) {
@@ -71,39 +71,36 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         tickableHelper.tick();
     }
 
-    private final boolean readFromStream(ByteBuf data) {
+    private boolean readFromStream(ByteBuf data) {
         boolean output = false;
-
         try {
             if (this.canBeRotated()) {
-                ForgeDirection old_Forward = this.forward;
-                byte orientation = data.readByte();
-                this.forward = ForgeDirection.getOrientation(orientation & 7);
-                output = this.forward != old_Forward;
+                ForgeDirection oldForward = this.getForward(), oldUp = this.getUp();
+                byte orientationForward = data.readByte(), orientationUp = data.readByte();
+                ForgeDirection newForward = ForgeDirection.getOrientation(orientationForward & 7);
+                ForgeDirection newUp = ForgeDirection.getOrientation(orientationUp & 7);
+                this.setOrientation(newForward, newUp);
+                output = newForward != oldForward || newUp != oldUp;
             }
-            for(TileEventHandler h : this.getHandlerListFor(TileEventType.CLIENT_NBT_READ)) {
+            for (TileEventHandler h : this.getHandlerListFor(TileEventType.CLIENT_NBT_READ)) {
                 if (h.readFromStream(this, data)) {
                     output = true;
                 }
             }
-        } catch (Throwable ignored) {
-        }
-
+        } catch (Throwable ignored) {}
         return output;
     }
 
-    private final void writeToStream(ByteBuf data) {
+    private void writeToStream(ByteBuf data) {
         try {
             if (this.canBeRotated()) {
-                byte orientation = (byte)(this.forward.ordinal());
-                data.writeByte(orientation);
+                data.writeByte((byte) getForward().ordinal());
+                data.writeByte((byte) getUp().ordinal());
             }
-
-            for(TileEventHandler h : this.getHandlerListFor(TileEventType.CLIENT_NBT_WRITE)) {
+            for (TileEventHandler h : this.getHandlerListFor(TileEventType.CLIENT_NBT_WRITE)) {
                 h.writeToStream(this, data);
             }
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
     }
 
     public void markForUpdate() {
@@ -158,17 +155,17 @@ public abstract class FoxBaseTile extends TileEntity implements IOrientable {
         return true;
     }
 
-    public ForgeDirection getForward() {
-        return this.forward;
-    }
+    @Override
+    public ForgeDirection getForward() { return FastOrientableManager.getForward(orientableId); }
 
     @Override
-    public void setOrientation(ForgeDirection var1) {
-        this.forward = var1;
+    public ForgeDirection getUp() { return FastOrientableManager.getUp(orientableId); }
+
+    @Override
+    public void setOrientation(ForgeDirection forward, ForgeDirection up) {
+        FastOrientableManager.set(orientableId, forward, up);
         this.markForUpdate();
-        if (worldObj.blockExists(this.xCoord, this.yCoord, this.zCoord)) {
-            worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, Blocks.air);
-        }
+        if (worldObj != null) worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, getBlockType());
     }
 
     @Override

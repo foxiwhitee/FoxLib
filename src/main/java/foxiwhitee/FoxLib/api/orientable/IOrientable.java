@@ -7,5 +7,7 @@ public interface IOrientable {
 
     ForgeDirection getForward();
 
-    void setOrientation(ForgeDirection var1);
+    ForgeDirection getUp();
+
+    void setOrientation(ForgeDirection var1, ForgeDirection var2);
 }

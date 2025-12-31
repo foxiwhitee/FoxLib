@@ -8,6 +8,7 @@ import foxiwhitee.FoxLib.tile.inventory.FoxInternalInventory;
 import foxiwhitee.FoxLib.tile.inventory.IFoxInternalInventory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,7 +56,6 @@ public abstract class FoxBaseInvTile extends FoxBaseTile implements IFoxInternal
                 drops.add(is);
             }
         }
-
     }
 
     @Override
