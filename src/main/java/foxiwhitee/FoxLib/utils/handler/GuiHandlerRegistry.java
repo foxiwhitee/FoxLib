@@ -61,8 +61,10 @@ public class GuiHandlerRegistry {
     private static boolean validateGuiConstructor(Class<? extends GuiContainer> guiClass, Class<? extends Container> containerClass) {
         for (Constructor<?> constructor : guiClass.getConstructors()) {
             Class<?>[] paramTypes = constructor.getParameterTypes();
-            if (paramTypes.length == 1 && paramTypes[0].isAssignableFrom(containerClass)) {
-                return true;
+            if (paramTypes.length == 1) {
+                if (paramTypes[0].isAssignableFrom(containerClass)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -71,10 +73,13 @@ public class GuiHandlerRegistry {
     private static boolean validateContainerConstructor(Class<? extends Container> containerClass, Class<? extends TileEntity> tileClass) {
         for (Constructor<?> constructor : containerClass.getConstructors()) {
             Class<?>[] paramTypes = constructor.getParameterTypes();
-            if (paramTypes.length == 2 &&
-                    paramTypes[0].isAssignableFrom(EntityPlayer.class) &&
-                    paramTypes[1].isAssignableFrom(tileClass)) {
-                return true;
+            if (paramTypes.length == 2) {
+                boolean var0 = paramTypes[0].isAssignableFrom(EntityPlayer.class);
+                boolean var1 = paramTypes[1].isAssignableFrom(tileClass);
+
+                if (var0 && var1) {
+                    return true;
+                }
             }
         }
         return false;

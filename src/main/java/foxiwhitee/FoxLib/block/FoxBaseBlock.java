@@ -41,14 +41,13 @@ public class FoxBaseBlock extends Block implements ITileEntityProvider {
     protected IIcon westIcon;
 
     protected final String name;
-    private String folder = "";
     private Class<? extends TileEntity> tileEntityType;
 
     public FoxBaseBlock(String modID, String name) {
         super(Material.rock);
         this.name = name;
         this.setBlockName(name);
-        this.setBlockTextureName(modID + ":" + folder + name);
+        this.setBlockTextureName(modID + ":" + getFolder() + name);
         this.lightOpacity = 1;
         this.setHardness(2.0F);
         this.setResistance(10.0F);
@@ -277,11 +276,11 @@ public class FoxBaseBlock extends Block implements ITileEntityProvider {
         return ClientProxy.foxBaseBlockRenderId;
     }
 
-    public void setFolder(String folder) {
-        this.folder = folder;
-    }
-
     protected boolean hasUpDownRotate() {
         return false;
+    }
+
+    public String getFolder() {
+        return "";
     }
 }

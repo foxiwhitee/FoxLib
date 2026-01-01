@@ -93,7 +93,9 @@ public class ConfigHandler {
                             desc + " [range: " + (long) minVal + " ~ " + (long) maxVal + "]"));
                         field.setLong(null, value);
                     } else if (type == Double.TYPE) {
-                        double value = config.get(category, key, (Double) defaultValue, desc, minVal, maxVal).getDouble();
+                        double value = config.get(category, key, (Double) defaultValue,
+                            desc + " [range: " + minVal + " ~ " + maxVal + ", default: " + (Double) defaultValue + "]",
+                            minVal, maxVal).getDouble();
                         field.setDouble(null, value);
                     } else if (type == Boolean.TYPE) {
                         boolean value = config.getBoolean(key, category, (Boolean) defaultValue, desc);
