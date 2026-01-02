@@ -14,6 +14,7 @@ import java.util.List;
 
 public abstract class FoxBaseGui extends GuiContainer {
     private String modID = FoxLib.MODID;
+    private boolean drawingFG = false;
 
     public FoxBaseGui(Container container) {
         super(container);
@@ -65,12 +66,15 @@ public abstract class FoxBaseGui extends GuiContainer {
         int ox = this.guiLeft;
         int oy = this.guiTop;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.drawFG(ox, oy, x, y);
+        //this.drawFG(ox, oy, x, y);
+        drawingFG = true;
+        this.drawFG(0, 0, x, y);
+        drawingFG = false;
     }
 
     public final void drawIfInMouse(int mouseX, int mouseY, int x, int y, int w, int h, String... str) {
         if (mouseX >= this.guiLeft + x && mouseX <= this.guiLeft + x + w && mouseY >= this.guiTop + y && mouseY <= this.guiTop + y + h)
-            drawHoveringText(new ArrayList<>(Arrays.asList(Arrays.copyOf((Object[]) str, str.length))), mouseX, mouseY, this.mc.fontRenderer);
+            drawHoveringText(new ArrayList<>(Arrays.asList(Arrays.copyOf((Object[]) str, str.length))), drawingFG ? mouseX - guiLeft : mouseX, drawingFG ? mouseY - guiTop : mouseY, this.mc.fontRenderer);
     }
 
     protected void drawHoveringText(List p_drawHoveringText_1_, int p_drawHoveringText_2_, int p_drawHoveringText_3_, FontRenderer p_drawHoveringText_4_) {
