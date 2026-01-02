@@ -90,6 +90,10 @@ public class FoxBaseButton extends GuiButton implements ITooltipButton {
         }
     }
 
+    public void setCurrentText(int current) {
+        this.current = Math.min(current, names.length - 1);
+    }
+
     @Override
     public int xPos() {
         return this.xPosition;
