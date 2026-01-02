@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class NetworkManager {
     public static NetworkManager instance;
+    public final NetworkPackets packets;
     private final FMLEventChannel channel;
     private final String channelName;
     private final IPacketHandler clientPacketHandler;
@@ -38,6 +39,7 @@ public class NetworkManager {
             this.clientPacketHandler = null;
         }
         this.serverPacketHandler = new ServerPacketProcessor();
+        packets = new NetworkPackets();
     }
 
     @SubscribeEvent
@@ -81,9 +83,9 @@ public class NetworkManager {
 
     public void sendToChunk(BasePacket packet, World world, int chunkX, int chunkZ) {
         PlayerManager manager = ((WorldServer) world).getPlayerManager();
-        for (Object player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-            if (manager.isPlayerWatchingChunk((EntityPlayerMP) player, chunkX, chunkZ)) {
-                sendToPlayer(packet, (EntityPlayerMP) player);
+        for (EntityPlayerMP player : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (manager.isPlayerWatchingChunk(player, chunkX, chunkZ)) {
+                sendToPlayer(packet, player);
             }
         }
     }
@@ -93,9 +95,9 @@ public class NetworkManager {
         public void onPacketData(IInfoPacket network, FMLProxyPacket packet, EntityPlayer player) {
             try {
                 int packetId = packet.payload().readInt();
-                BasePacket basePacket = NetworkPackets.fromId(packetId).createInstance(packet.payload());
+                BasePacket basePacket = NetworkManager.instance.packets.createInstance(packetId, packet.payload());
                 basePacket.handleServerSide(network, basePacket, player);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException ignored) {
             }
         }
     }
@@ -106,10 +108,10 @@ public class NetworkManager {
         public void onPacketData(IInfoPacket network, FMLProxyPacket packet, EntityPlayer player) {
             try {
                 int packetId = packet.payload().readInt();
-                BasePacket basePacket = NetworkPackets.fromId(packetId).createInstance(packet.payload());
+                BasePacket basePacket = NetworkManager.instance.packets.createInstance(packetId, packet.payload());
                 EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
                 basePacket.handleClientSide(network, basePacket, clientPlayer);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | RuntimeException ignored) {
             }
         }
     }

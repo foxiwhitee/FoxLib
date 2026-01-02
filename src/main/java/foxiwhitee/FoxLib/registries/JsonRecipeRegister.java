@@ -11,7 +11,7 @@ import java.util.Map;
 public class JsonRecipeRegister implements IJsonRecipeRegister {
     private final Map<String, Class<? extends IJsonRecipe>> recipes = new LinkedHashMap<>();
 
-    public JsonRecipeRegister() {
+    JsonRecipeRegister() {
         register(ShapedCraft.class, "workbenchShaped");
         register(ShapelessCraft.class, "workbenchShapeless");
     }

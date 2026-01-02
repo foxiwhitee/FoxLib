@@ -11,17 +11,16 @@ public abstract class BasePacket {
 
     protected BasePacket() {
         this.packetData = Unpooled.buffer();
-        this.packetId = NetworkPackets.fromClass(this.getClass()).ordinal();
+        this.packetId = NetworkManager.instance.packets.fromClass(this.getClass());
         this.packetData.writeInt(this.packetId);
     }
 
     protected BasePacket(ByteBuf buffer) {
         this.packetData = buffer;
-        this.packetId = NetworkPackets.fromClass(this.getClass()).ordinal();
+        this.packetId = NetworkManager.instance.packets.fromClass(this.getClass());
     }
 
-    protected void serialize(ByteBuf buffer) {
-    }
+    protected void serialize(ByteBuf buffer) {}
 
     public void handleServerSide(IInfoPacket network, BasePacket packet, EntityPlayer player) {
         throw new UnsupportedOperationException("Server handler not implemented for packet ID: " + packetId);

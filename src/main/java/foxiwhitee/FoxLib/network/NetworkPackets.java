@@ -1,49 +1,46 @@
 package foxiwhitee.FoxLib.network;
 
-
-import foxiwhitee.FoxLib.network.packets.DefaultPacket;
+import foxiwhitee.FoxLib.api.FoxLibApi;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public enum NetworkPackets {
-    DEFAULT_PACKET(DefaultPacket.class);
+public class NetworkPackets {
+    private final List<Class<? extends BasePacket>> packetClasses = new ArrayList<>();
+    private final List<Constructor<? extends BasePacket>> packetConstructors = new ArrayList<>();
 
-    private final Class<? extends BasePacket> pktClass;
-    private final Constructor<? extends BasePacket> pktConstructor;
-    private static final Map<Class<? extends BasePacket>, NetworkPackets> CLASS_LOOKUP = new HashMap<>();
+    NetworkPackets() {
+        for (int i = 0; i < FoxLibApi.instance.registries().registerPacket().size(); i++) {
+            Class<? extends BasePacket> pktClass =  FoxLibApi.instance.registries().registerPacket().get(i);
+            packetClasses.add(pktClass);
 
-    NetworkPackets(Class<? extends BasePacket> packetClass) {
-        this.pktClass = packetClass;
-        Constructor<? extends BasePacket> constructor = null;
+            Constructor<? extends BasePacket> constructor = null;
 
-        try {
-            constructor = packetClass.getConstructor(ByteBuf.class);
-        } catch (NoSuchMethodException | SecurityException e) {
-            throw new IllegalStateException("Packet class " + packetClass.getName() + " must have a ByteBuf constructor", e);
-        }
+            try {
+                constructor = pktClass.getConstructor(ByteBuf.class);
+            } catch (NoSuchMethodException | SecurityException e) {
+                throw new IllegalStateException("Packet class " + pktClass.getName() + " must have a ByteBuf constructor", e);
+            }
 
-        this.pktConstructor = constructor;
-    }
-
-    static {
-        for (NetworkPackets packet : values()) {
-            CLASS_LOOKUP.put(packet.pktClass, packet);
+            packetConstructors.add(constructor);
         }
     }
 
-    public static NetworkPackets fromId(int packetId) {
-        return values()[packetId];
+    public int fromClass(Class<? extends BasePacket> packetClass) {
+        for (int i = 0; i < packetClasses.size(); i++) {
+            if (packetClasses.get(i).equals(packetClass)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
-    public static NetworkPackets fromClass(Class<? extends BasePacket> packetClass) {
-        return CLASS_LOOKUP.get(packetClass);
-    }
-
-    public BasePacket createInstance(ByteBuf buffer) throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        return pktConstructor.newInstance(buffer);
+    public BasePacket createInstance(int packetId, ByteBuf buffer) throws InstantiationException, IllegalAccessException, InvocationTargetException, NullPointerException {
+        return packetConstructors.get(packetId).newInstance(buffer);
     }
 }
