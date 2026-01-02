@@ -10,8 +10,6 @@ import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 public class FoxBaseButton extends GuiButton implements ITooltipButton {
-    private final int width;
-    private final int height;
     private final int u;
     private final int v;
     private final int textureSizeX;
