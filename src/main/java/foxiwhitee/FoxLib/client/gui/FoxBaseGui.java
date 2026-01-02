@@ -1,12 +1,17 @@
 package foxiwhitee.FoxLib.client.gui;
 
 import foxiwhitee.FoxLib.FoxLib;
+import foxiwhitee.FoxLib.api.button.ITooltipButton;
+import foxiwhitee.FoxLib.client.gui.buttons.FoxBaseButton;
 import foxiwhitee.FoxLib.utils.helpers.UtilGui;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +59,36 @@ public abstract class FoxBaseGui extends GuiContainer {
         return new int[]{512, 512};
     }
 
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for(Object c : this.buttonList) {
+            if (c instanceof ITooltipButton tooltip) {
+                int x = tooltip.xPos();
+                int y = tooltip.yPos();
+                if (x < mouseX && x + tooltip.getWidth() > mouseX && tooltip.isVisible() && y < mouseY && y + tooltip.getHeight() > mouseY) {
+                    if (y < 15) {
+                        y = 15;
+                    }
+
+                    String msg = tooltip.getMessage();
+                    if (msg != null) {
+                        this.drawTooltip(x + 11, y + 4, msg);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+        super.actionPerformed(button);
+        if (button instanceof FoxBaseButton foxBaseButton) {
+            foxBaseButton.nextText();
+        }
+    }
+
     protected final void drawGuiContainerBackgroundLayer(float f, int x, int y) {
         int ox = this.guiLeft;
         int oy = this.guiTop;
@@ -72,74 +107,81 @@ public abstract class FoxBaseGui extends GuiContainer {
         drawingFG = false;
     }
 
-    public final void drawIfInMouse(int mouseX, int mouseY, int x, int y, int w, int h, String... str) {
+    public final void drawIfInMouse(int mouseX, int mouseY, int x, int y, int w, int h, String str) {
         if (mouseX >= this.guiLeft + x && mouseX <= this.guiLeft + x + w && mouseY >= this.guiTop + y && mouseY <= this.guiTop + y + h)
-            drawHoveringText(new ArrayList<>(Arrays.asList(Arrays.copyOf((Object[]) str, str.length))), drawingFG ? mouseX - guiLeft : mouseX, drawingFG ? mouseY - guiTop : mouseY, this.mc.fontRenderer);
+            drawTooltip(drawingFG ? mouseX - guiLeft : mouseX, drawingFG ? mouseY - guiTop : mouseY, str);
     }
 
-    protected void drawHoveringText(List p_drawHoveringText_1_, int p_drawHoveringText_2_, int p_drawHoveringText_3_, FontRenderer p_drawHoveringText_4_) {
-        if (!p_drawHoveringText_1_.isEmpty()) {
-            GL11.glDisable(32826);
-            //RenderHelper.disableStandardItemLighting();
-            //GL11.glDisable(2896);
-            GL11.glDisable(2929);
-            int k = 0;
+    public void drawTooltip(int mouseX, int mouseY, String message) {
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-            for(Object s : p_drawHoveringText_1_) {
-                int l = p_drawHoveringText_4_.getStringWidth((String) s);
-                if (l > k) {
-                    k = l;
+        String[] lines = message.split("\n");
+        if (lines.length > 0) {
+            int tooltipWidth = 0;
+
+            for (String line : lines) {
+                int lineWidth = this.fontRendererObj.getStringWidth(line);
+                if (lineWidth > tooltipWidth) {
+                    tooltipWidth = lineWidth;
                 }
             }
 
-            int j2 = p_drawHoveringText_2_ + 12;
-            int k2 = p_drawHoveringText_3_ - 12;
-            int i1 = 8;
-            if (p_drawHoveringText_1_.size() > 1) {
-                i1 += 2 + (p_drawHoveringText_1_.size() - 1) * 10;
+            int x = mouseX + 12;
+            int y = mouseY - 12;
+            int tooltipHeight = 8;
+
+            if (lines.length > 1) {
+                tooltipHeight += 2 + (lines.length - 1) * 10;
             }
 
-            if (j2 + k > this.width) {
-                j2 -= 28 + k;
-            }
-
-            if (k2 + i1 + 6 > this.height) {
-                k2 = this.height - i1 - 6;
+            if (this.guiTop + y + tooltipHeight + 6 > this.height) {
+                y = this.height - tooltipHeight - this.guiTop - 6;
             }
 
             this.zLevel = 300.0F;
             itemRender.zLevel = 300.0F;
-            int j1 = -267386864;
-            this.drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-            this.drawGradientRect(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-            this.drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-            this.drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-            this.drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-            int k1 = 1347420415;
-            int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-            this.drawGradientRect(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-            this.drawGradientRect(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-            this.drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-            this.drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
 
-            for(int i2 = 0; i2 < p_drawHoveringText_1_.size(); ++i2) {
-                String s1 = (String)p_drawHoveringText_1_.get(i2);
-                p_drawHoveringText_4_.drawStringWithShadow(s1, j2, k2, -1);
-                if (i2 == 0) {
-                    k2 += 2;
+            int backgroundColor = 0xF0100010;
+            int borderColorStart = 0x505000FF;
+            int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
+
+            this.drawGradientRect(x - 3, y - 4, x + tooltipWidth + 3, y - 3, backgroundColor, backgroundColor);
+            this.drawGradientRect(x - 3, y + tooltipHeight + 3, x + tooltipWidth + 3, y + tooltipHeight + 4, backgroundColor, backgroundColor);
+            this.drawGradientRect(x - 3, y - 3, x + tooltipWidth + 3, y + tooltipHeight + 3, backgroundColor, backgroundColor);
+            this.drawGradientRect(x - 4, y - 3, x - 3, y + tooltipHeight + 3, backgroundColor, backgroundColor);
+            this.drawGradientRect(x + tooltipWidth + 3, y - 3, x + tooltipWidth + 4, y + tooltipHeight + 3, backgroundColor, backgroundColor);
+
+            this.drawGradientRect(x - 3, y - 3 + 1, x - 3 + 1, y + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+            this.drawGradientRect(x + tooltipWidth + 2, y - 3 + 1, x + tooltipWidth + 3, y + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
+            this.drawGradientRect(x - 3, y - 3, x + tooltipWidth + 3, y - 3 + 1, borderColorStart, borderColorStart);
+            this.drawGradientRect(x - 3, y + tooltipHeight + 2, x + tooltipWidth + 3, y + tooltipHeight + 3, borderColorEnd, borderColorEnd);
+
+            for (int i = 0; i < lines.length; ++i) {
+                String currentLine = lines[i];
+
+                if (i == 0) {
+                    currentLine = "§f" + currentLine;
+                } else {
+                    currentLine = "§7" + currentLine;
                 }
 
-                k2 += 10;
+                this.fontRendererObj.drawStringWithShadow(currentLine, x, y, -1);
+
+                if (i == 0) {
+                    y += 2;
+                }
+                y += 10;
             }
 
             this.zLevel = 0.0F;
             itemRender.zLevel = 0.0F;
-            //GL11.glEnable(2896);
-            GL11.glEnable(2929);
-            //RenderHelper.enableStandardItemLighting();
-            GL11.glEnable(32826);
         }
 
+        GL11.glPopAttrib();
     }
 
     public void setModID(String modID) {
