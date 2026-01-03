@@ -1,5 +1,6 @@
 package foxiwhitee.FoxLib.tile.inventory;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -44,7 +45,7 @@ public class FoxInternalInventory implements IInventory {
                 ns = split.splitStack(qty);
             }
 
-            if (this.tile != null) {
+            if (this.tile != null && FMLCommonHandler.instance().getEffectiveSide().isServer()) {
                 this.tile.onChangeInventory(this, slot, InvOperation.decreaseStackSize, ns, (ItemStack)null);
             }
 
@@ -79,8 +80,9 @@ public class FoxInternalInventory implements IInventory {
                     removed = null;
                 }
             }
-
-            this.tile.onChangeInventory(this, i, InvOperation.setInventorySlotContents, removed, added);
+            if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
+                this.tile.onChangeInventory(this, i, InvOperation.setInventorySlotContents, removed, added);
+            }
             this.markDirty();
         }
     }
@@ -96,7 +98,7 @@ public class FoxInternalInventory implements IInventory {
 
     @Override
     public void markDirty() {
-        if (this.tile != null) {
+        if (this.tile != null && FMLCommonHandler.instance().getEffectiveSide().isServer()) {
             this.tile.onChangeInventory(this, -1, InvOperation.markDirty, (ItemStack)null, (ItemStack)null);
         }
     }

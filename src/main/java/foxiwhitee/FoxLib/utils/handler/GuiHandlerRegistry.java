@@ -45,7 +45,7 @@ public class GuiHandlerRegistry {
                 }
 
                 if (!validateContainerConstructor(annotation.container(), annotation.tile())) {
-                    throw new SimpleGuiHandlerException("Invalid Container constructor for " + annotation.gui().getName() + " in " + clazz.getName() + " must inherit from Block. Container must accept EntityPlayer and TileEntity");
+                    throw new SimpleGuiHandlerException("Invalid Container constructor for " + annotation.container().getName() + " in " + clazz.getName() + " must inherit from Block. Container must accept EntityPlayer and TileEntity");
                 }
 
                 GuiHandlers.registerHandler(clazz);
